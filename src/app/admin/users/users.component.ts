@@ -28,7 +28,8 @@ export class UsersComponent implements OnInit {
       params => {
         const id = params['id'];
         this.action = params['action'];
-        this.selectedUser = this.users.find(user => user.id === +id)!;
+        if(id)
+          this.selectedUser = this.users.find(user => user.id === +id)!;
       }
     );
   }
@@ -39,6 +40,11 @@ export class UsersComponent implements OnInit {
 
   navigateToUser(id: number) {
     this.router.navigate(['admin', 'users'], {queryParams : {id : id , action : 'view'}});
+  }
+
+  adduser(){
+    this.selectedUser = new User();
+    this.router.navigate(['admin', 'users'], {queryParams : {action : 'add'}});
   }
 
 }
