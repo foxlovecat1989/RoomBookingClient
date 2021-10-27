@@ -71,4 +71,11 @@ export class DataService {
   getUsers() : Observable<Array<User>> {
     return of(this.users);
   }
+
+  updateUser(user: User) : Observable<User> {
+    const originUser = this.users.find(u => u.id === user.id)!;
+    originUser.name = user.name;
+
+    return of(originUser);
+  }
 }
