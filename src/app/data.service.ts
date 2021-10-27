@@ -78,4 +78,16 @@ export class DataService {
 
     return of(originUser);
   }
+
+  addUser(newUser : User, password : string) : Observable<User>{
+    let id = 0;
+    for(const user of this.users){
+      if(user.id > id){
+        id = user.id;
+      }
+    }
+    newUser.id = id + 1;
+    this.users.push(newUser);
+    return of(newUser);
+  }
 }
