@@ -8,6 +8,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { UsersComponent } from './admin/users/users.component';
 import { RoomsComponent } from './admin/rooms/rooms.component';
 import { RouterModule } from '@angular/router';
+import { RoomDetailComponent } from './admin/rooms/room-detail/room-detail.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { RouterModule } from '@angular/router';
     MenuComponent,
     CalendarComponent,
     UsersComponent,
-    RoomsComponent
+    RoomsComponent,
+    RoomDetailComponent
   ],
   imports: [
     BrowserModule,
