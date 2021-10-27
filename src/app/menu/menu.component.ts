@@ -15,17 +15,14 @@ export class MenuComponent implements OnInit {
 
   navigateToAdminUsers(){
     this.router.navigate(['admin', 'users']);
-    console.log('users');
   }
 
   navigateToAdminRooms(){
     this.router.navigate(['admin', 'rooms']);
-    console.log('rooms');
   }
 
   navigateToHome(){
     this.router.navigate(['']);
-    console.log('home');
   }
 
 }
