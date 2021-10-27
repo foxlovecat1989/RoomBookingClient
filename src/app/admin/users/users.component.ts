@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
 import { User } from 'src/Model/User';
-
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -17,12 +16,13 @@ export class UsersComponent implements OnInit {
       private dataService: DataService,
       private router: Router,
       private activatedRoute : ActivatedRoute
-    ) {
-
-    }
+    ) {}
 
   ngOnInit(): void {
-    this.users = this.dataService.getUsers();
+    this.subscribeUsers();
+    this.subscribeRouteParams();
+  }
+  private subscribeRouteParams() {
     this.activatedRoute.queryParams.subscribe(
       params => {
         const id = params['id'];
@@ -30,6 +30,11 @@ export class UsersComponent implements OnInit {
       }
     );
   }
+
+  private subscribeUsers() {
+    this.dataService.getUsers().subscribe(users => this.users = users);
+  }
+
   navigateToUser(id: number) {
     this.router.navigate(['admin', 'users'], {queryParams : {id : id }});
   }

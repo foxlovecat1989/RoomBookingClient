@@ -17,19 +17,25 @@ export class RoomsComponent implements OnInit {
     private dataService: DataService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) {
-
-  }
+  ) { }
 
   ngOnInit(): void {
-    this.rooms = this.dataService.getRooms();
+    this.subscribeRooms();
+    this.subscribeRouteParams();
+  }
+
+  private subscribeRouteParams() {
     this.activatedRoute.queryParams.subscribe(
       params => {
-        const id = params['id']
-        if(id)
+        const id = params['id'];
+        if (id)
           this.selectedRoom = this.rooms.find(room => room.id === +id)!;
       }
     );
+  }
+
+  private subscribeRooms() {
+    this.dataService.getRooms().subscribe(rooms => this.rooms = rooms);
   }
 
   navigateToRoom(id: number){

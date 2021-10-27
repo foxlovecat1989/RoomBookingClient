@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { Layout, LayoutCapacity, Room } from 'src/Model/Room';
 import { User } from 'src/Model/User';
 
@@ -63,11 +64,11 @@ export class DataService {
     this.users.push(user3);
   }
 
-  getRooms() : Array<Room>{
-    return this.rooms;
+  getRooms() : Observable<Array<Room>>{
+    return of(this.rooms);
   }
 
-  getUsers() : Array<User> {
-    return this.users;
+  getUsers() : Observable<Array<User>> {
+    return of(this.users);
   }
 }
