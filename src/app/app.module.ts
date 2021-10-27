@@ -10,6 +10,7 @@ import { RoomsComponent } from './admin/rooms/rooms.component';
 import { RouterModule } from '@angular/router';
 import { RoomDetailComponent } from './admin/rooms/room-detail/room-detail.component';
 import { UserDetailComponent } from './admin/users/user-detail/user-detail.component';
+import { UserEditComponent } from './admin/users/user-edit/user-edit.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { UserDetailComponent } from './admin/users/user-detail/user-detail.compo
     UsersComponent,
     RoomsComponent,
     RoomDetailComponent,
-    UserDetailComponent
+    UserDetailComponent,
+    UserEditComponent
   ],
   imports: [
     BrowserModule,
