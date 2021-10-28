@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
 import { RoomDetailComponent } from './admin/rooms/room-detail/room-detail.component';
 import { UserDetailComponent } from './admin/users/user-detail/user-detail.component';
 import { UserEditComponent } from './admin/users/user-edit/user-edit.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RoomEditComponent } from './admin/rooms/room-edit/room-edit.component';
 
 @NgModule({
@@ -29,7 +29,8 @@ import { RoomEditComponent } from './admin/rooms/room-edit/room-edit.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
