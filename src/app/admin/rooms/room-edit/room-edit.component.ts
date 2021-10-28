@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { DataService } from 'src/app/data.service';
 import { Room, Layout, LayoutCapacity } from 'src/Model/Room';
 @Component({
   selector: 'app-room-edit',
@@ -18,34 +20,63 @@ export class RoomEditComponent implements OnInit {
     location : new FormControl('location')
   });
 
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private dataService: DataService
+    ) { }
 
   ngOnInit(): void {
-    this.roomForm.patchValue({
-      roomName : this.room.name,
-      location : this.room.location
+    this.roomForm = this.formBuilder.group({
+      roomName : [this.room.name, Validators.required],
+      location : [this.room.location, [Validators.required, Validators.min(2)]]
     });
+
     for(const layout of this.layouts){
-      this.roomForm.addControl(`layout${layout}`, new FormControl(`layout${layout}`));
+      const layoutCapacity = this.room.layoutCapacities.find(
+        lc => {
+          if(this.isValidKey(layout, Layout))
+            return lc.layout === Layout[layout];
+          return false;
+        }
+      );
+      const initialCapacity = (layoutCapacity == null) ? 0 : layoutCapacity.capacity;
+      this.roomForm.addControl(`layout${layout}`, this.formBuilder.control(initialCapacity));
     }
+
   }
 
   onSubmit(){
+      this.getValueFromInputField();
+      this.saveData();
+  }
+
+  private saveData() {
+    if (this.room.id == null) { // under the adding mode
+      this.dataService.addRoom(this.room).subscribe(next => {
+        this.router.navigate(['admin', 'rooms'], { queryParams: { action: 'view', id: next.id } });
+      });
+    } else { // under the editing mode
+      this.dataService.updateRoom(this.room).subscribe(next => {
+        this.router.navigate(['admin', 'rooms'], { queryParams: { action: 'view', id: next.id } });
+      });
+    }
+  }
+
+  private getValueFromInputField() {
     this.room.name = this.roomForm.controls['roomName'].value;
     this.room.location = this.roomForm.controls['location'].value;
     this.room.layoutCapacities = new Array<LayoutCapacity>();
     for (const layout of this.layouts) {
       const layoutCapacity = new LayoutCapacity();
-      if(this.isValidKey(layout, Layout))
+      if (this.isValidKey(layout, Layout))
         layoutCapacity.layout = Layout[layout];
       layoutCapacity.capacity = this.roomForm.controls[`layout${layout}`].value;
       this.room.layoutCapacities.push(layoutCapacity);
     }
-    console.log(this.room);
-    // call a method to the dataService to save room
   }
 
-  isValidKey(key: string, obj: {[propName: string]: any}) : key is keyof object {
+  private isValidKey(key: string, obj: {[propName: string]: any}) : key is keyof object {
     return key in obj;
   }
 }

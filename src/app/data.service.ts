@@ -68,6 +68,27 @@ export class DataService {
     return of(this.rooms);
   }
 
+  addRoom(newRoom : Room) : Observable<Room>{
+    let id = 0;
+    for(const room of this.rooms){
+      if(room.id > id){
+        id = room.id;
+      }
+    }
+    newRoom.id = id + 1;
+    this.rooms.push(newRoom);
+    return of(newRoom);
+  }
+
+
+  updateRoom(room: Room) : Observable<Room>{
+    const originalRoom = this.rooms.find(next => next.id === room.id)!;
+    originalRoom.name = room.name;
+    originalRoom.location = room.location;
+    originalRoom.layoutCapacities = room.layoutCapacities;
+    return of(originalRoom);
+  }
+
   getUsers() : Observable<Array<User>> {
     return of(this.users);
   }
