@@ -2,20 +2,28 @@
 
 <div class="bg-warning p-5" *ngIf="message">{{ message }}</div>
 
-<form>
+<form #userForm=ngForm>
   <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" placeholder="user name" name="name" [(ngModel)]="formUser.name">
-    <div class="alert alert-danger">error message placeholder</div>
-
+    <input type="text" class="form-control" id="name" placeholder="user name" name="name"
+      [(ngModel)]="formUser.name" required #nameField=ngModel (change)="checkNameIsValid()">
+    <div class="alert alert-danger" *ngIf="nameField.invalid && nameField.touched">Name is required</div>
+    <div class="alert alert-danger" *ngIf="!nameIsValid && nameField.touched">Name cannot be blank</div>
   </div>
 
   <div class="form-group" *ngIf="user.id==null"> <!-- only show this field on adding a user -->
     <label for="password">Password</label>
-    <input type="password" class="form-control" id="password" placeholder="password" name="password" [(ngModel)]="password">
-    <div class="alert alert-danger">error message placeholder</div>
-
+    <input type="password" class="form-control" id="password" placeholder="password" name="password"
+      [(ngModel)]="password" (change)="checkPasswordsAreValid()" #pass1=ngModel>
+    <div class="alert alert-danger" *ngIf="pass1.invalid && pass1.touched">Passwords are required</div>
+    <div class="alert alert-danger" *ngIf="!passwordsAreValid && pass1.touched">Passwords are required</div>
+  </div>
+  <div class="form-group" *ngIf="user.id==null"> <!-- only show this field on adding a user -->
+    <label for="password2">Password</label>
+    <input type="password" class="form-control" id="password2" placeholder="password" name="password2"
+    [(ngModel)]="password2" (change)="checkPasswordsAreValid()" #pass2=ngModel>
+    <div class="alert alert-danger" *ngIf="!passwordsMatch && pass2.touched">Passwords are not match</div>
   </div>
 
-  <button type="button" class="btn btn-primary" (click)="submit()">Save</button>
+  <button type="button" class="btn btn-primary" [disabled]="userForm.invalid || !nameIsValid || !passwordsAreValid || !passwordsMatch" (click)="submit()">Save</button>
 </form>

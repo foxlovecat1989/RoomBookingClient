@@ -15,6 +15,10 @@ export class UserEditComponent implements OnInit {
   message!: string;
   formUser!: User;
   password!: string;
+  password2!: string;
+  nameIsValid = false;
+  passwordsAreValid = false;
+  passwordsMatch = false;
 
   constructor(
       private dataService: DataService,
@@ -23,6 +27,8 @@ export class UserEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.copyUserToAnotherObject();
+    this.checkNameIsValid();
+    this.checkPasswordsAreValid();
   }
 
   private copyUserToAnotherObject() {
@@ -50,5 +56,25 @@ export class UserEditComponent implements OnInit {
       .subscribe(
         user => this.router.navigate(['admin', 'users'], { queryParams: { action: 'add'} })
       );
+  }
+
+  checkNameIsValid(){
+    if(this.formUser.name)  // editing a user
+      this.nameIsValid = this.formUser.name.trim().length > 0;
+    else                    // adding a user
+      this.nameIsValid = false;
+  }
+
+  checkPasswordsAreValid(){
+    if(this.formUser.id!=null){   // editing a user
+      this.passwordsAreValid = true;
+      this.passwordsMatch = true;
+    }
+    else {                        // adding a user
+      this.passwordsMatch = this.password === this.password2;
+      if(this.password != null){
+        this.passwordsAreValid = this.password.trim().length > 0;
+      }
+    }
   }
 }
