@@ -1,3 +1,4 @@
+import { identifierModuleUrl } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
@@ -12,6 +13,7 @@ export class RoomsComponent implements OnInit {
 
   rooms!: Array<Room>;
   selectedRoom!: Room;
+  action!: string;
 
   constructor(
     private dataService: DataService,
@@ -28,6 +30,7 @@ export class RoomsComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(
       params => {
         const id = params['id'];
+        this.action = params['action'];
         if (id)
           this.selectedRoom = this.rooms.find(room => room.id === +id)!;
       }
@@ -38,8 +41,13 @@ export class RoomsComponent implements OnInit {
     this.dataService.getRooms().subscribe(rooms => this.rooms = rooms);
   }
 
-  navigateToRoom(id: number){
-    this.router.navigate(['admin', 'rooms'], {queryParams: {id: id}});
+  navigateToViewRoom(id: number){
+    this.router.navigate(['admin', 'rooms'], {queryParams : {id : id, action : 'view'}});
+  }
+
+  navigateToAddRoom(){
+    this.selectedRoom = new Room();
+    this.router.navigate(['admin', 'rooms'], {queryParams : {action : 'edit'}});
   }
 
 }
