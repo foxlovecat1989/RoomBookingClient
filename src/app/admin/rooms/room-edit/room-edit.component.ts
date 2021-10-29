@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DataService } from 'src/app/data.service';
+import { FormResetService } from 'src/app/form-reset.service';
 import { Room, Layout, LayoutCapacity } from 'src/Model/Room';
 @Component({
   selector: 'app-room-edit',
@@ -15,6 +17,9 @@ export class RoomEditComponent implements OnInit {
   layoutEnum!: Layout;
   layouts = Object.keys(Layout);
   labelOfLayout!: string[];
+
+  resetFormEventSubscription!: Subscription;
+
   roomForm = new FormGroup({
     roomName : new FormControl('roomName'),
     location : new FormControl('location')
@@ -23,19 +28,40 @@ export class RoomEditComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private dataService: DataService
+    private dataService: DataService,
+    private formResetService : FormResetService
     ) { }
 
   ngOnInit(): void {
+    this.intializeForm();
+    this.subscribeResetFormEvent();
+
+  }
+
+  ngOnDestroy(): void{
+    this.resetFormEventSubscription.unsubscribe();
+  }
+
+  private subscribeResetFormEvent() {
+    this.resetFormEventSubscription =
+        this.formResetService.resetRoomFormEvent.subscribe(
+          room => {
+            this.room = room;
+            this.intializeForm();
+          }
+        );
+  }
+
+  private intializeForm() {
     this.roomForm = this.formBuilder.group({
-      roomName : [this.room.name, Validators.required],
-      location : [this.room.location, [Validators.required, Validators.min(2)]]
+      roomName: [this.room.name, Validators.required],
+      location: [this.room.location, [Validators.required, Validators.min(2)]]
     });
 
-    for(const layout of this.layouts){
+    for (const layout of this.layouts) {
       const layoutCapacity = this.room.layoutCapacities.find(
         lc => {
-          if(this.isValidKey(layout, Layout))
+          if (this.isValidKey(layout, Layout))
             return lc.layout === Layout[layout];
           return false;
         }
@@ -43,7 +69,6 @@ export class RoomEditComponent implements OnInit {
       const initialCapacity = (layoutCapacity == null) ? 0 : layoutCapacity.capacity;
       this.roomForm.addControl(`layout${layout}`, this.formBuilder.control(initialCapacity));
     }
-
   }
 
   onSubmit(){
