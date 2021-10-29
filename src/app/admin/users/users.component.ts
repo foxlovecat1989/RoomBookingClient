@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
+import { FormResetService } from 'src/app/form-reset.service';
 import { User } from 'src/Model/User';
 @Component({
   selector: 'app-users',
@@ -16,7 +17,8 @@ export class UsersComponent implements OnInit {
   constructor(
       private dataService: DataService,
       private router: Router,
-      private activatedRoute : ActivatedRoute
+      private activatedRoute : ActivatedRoute,
+      private formResetService : FormResetService
     ) {}
 
   ngOnInit(): void {
@@ -28,8 +30,13 @@ export class UsersComponent implements OnInit {
       params => {
         const id = params['id'];
         this.action = params['action'];
-        if(id)
+        if(id)                        // under the editing mode
           this.selectedUser = this.users.find(user => user.id === +id)!;
+        if(this.action === 'add'){    // under the adding mode
+          this.selectedUser = new User();
+          this.action = 'edit';
+          this.formResetService.resetUserFormEvent.emit(this.selectedUser);
+        }
       }
     );
   }
@@ -38,12 +45,11 @@ export class UsersComponent implements OnInit {
     this.dataService.getUsers().subscribe(users => this.users = users);
   }
 
-  navigateToUser(id: number) {
+  navigateToViewUser(id: number) {
     this.router.navigate(['admin', 'users'], {queryParams : {id : id , action : 'view'}});
   }
 
-  adduser(){
-    this.selectedUser = new User();
+  navigateToAddUser(){
     this.router.navigate(['admin', 'users'], {queryParams : {action : 'add'}});
   }
 

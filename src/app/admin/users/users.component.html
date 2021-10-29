@@ -1,5 +1,5 @@
 <h1>Users Admin</h1>
-<a class="btn btn-warning mb-3" (click)="adduser()">add</a>
+<a class="btn btn-warning mb-3" (click)="navigateToAddUser()">add</a>
 <div class="row">
   <div class="col-6">
     <table class="table">
@@ -14,7 +14,7 @@
       <tr *ngFor="let user of users"> <!-- repeat this tr for each user -->
         <td>{{ user.id }}</td>
         <td>{{ user.name }}</td>
-        <td><button type="button" class="btn btn-primary" (click)="navigateToUser(user.id)">view</button></td>
+        <td><button type="button" class="btn btn-primary" (click)="navigateToViewUser(user.id)">view</button></td>
       </tr>
       </tbody>
     </table>
