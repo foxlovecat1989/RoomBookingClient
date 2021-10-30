@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalendarComponent implements OnInit {
 
+  selectedDate = new Date();
+  date!: string;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.date = formatDate(this.selectedDate, 'yyyy-MM-dd', 'en-US');
   }
 
 }
