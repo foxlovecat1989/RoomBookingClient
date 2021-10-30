@@ -118,6 +118,7 @@ export class DataService {
     }
     newRoom.id = id + 1;
     this.rooms.push(newRoom);
+    
     return of(newRoom);
   }
 
@@ -127,12 +128,14 @@ export class DataService {
     originalRoom.name = room.name;
     originalRoom.location = room.location;
     originalRoom.layoutCapacities = room.layoutCapacities;
+
     return of(originalRoom);
   }
 
   deleteRoom(id: number) : Observable<any>{
     const room = this.rooms.find(r => r.id === id)!;
     this.rooms.splice(this.rooms.indexOf(room), 1);
+
     return of(null);
   }
 
@@ -160,12 +163,14 @@ export class DataService {
     }
     newUser.id = id + 1;
     this.users.push(newUser);
+
     return of(newUser);
   }
 
   deleteUser(id: number) : Observable<any>{
     const user = this.users.find( user => user.id === id)!;
     this.users.splice(this.users.indexOf(user), 1);
+
     return of(null);
   }
 
@@ -203,8 +208,16 @@ export class DataService {
     }
     newBooking.id = id + 1;
     this.bookings.push(newBooking);
-    
+
     return of(newBooking);
   }
+
+  deleteBooking(id : number) : Observable<any>{
+    const booking = this.bookings.find(b => b.id === id)!;
+    this.bookings.splice(this.bookings.indexOf(booking), 1);
+
+    return of(null);
+  }
+
 
 }
