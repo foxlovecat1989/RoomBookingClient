@@ -1,5 +1,8 @@
+import { formatDate } from '@angular/common';
+import { TYPED_NULL_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { Booking } from 'src/Model/Booking';
 import { Layout, LayoutCapacity, Room } from 'src/Model/Room';
 import { User } from 'src/Model/User';
 
@@ -8,8 +11,9 @@ import { User } from 'src/Model/User';
 })
 export class DataService {
 
-  private rooms = new Array<Room>();
-  private users = new Array<User>();
+  private rooms!: Array<Room>;
+  private users!: Array<User>;
+  private bookings!: Array<Booking>;
 
   constructor() {
     this.initialState();
@@ -17,7 +21,8 @@ export class DataService {
 
   private initialState() {
     this.generateDummyRooms();
-    this.generatedummyUsers();
+    this.generateDummyUsers();
+    this.generatedDummyBookings();
   }
 
   private generateDummyRooms() {
@@ -48,7 +53,7 @@ export class DataService {
     this.rooms.push(room2);
   }
 
-  private generatedummyUsers() {
+  private generateDummyUsers() {
     this.users = new Array<User>();
     const user1 = new User();
     user1.id = 1;
@@ -62,6 +67,42 @@ export class DataService {
     this.users.push(user1);
     this.users.push(user2);
     this.users.push(user3);
+  }
+
+  private generatedDummyBookings(){
+    this.bookings = new Array<Booking>();
+    const booking1 = new Booking();
+    const room1 = this.getRoomById(1);
+    const user1 = this.getUserById(1);
+    booking1.id = 1;
+    booking1.room = room1;
+    booking1.user = user1;
+    booking1.layout = Layout.THEATER;
+    booking1.title = 'Example meeting';
+    booking1.date = formatDate(new Date(), 'yyyy-MM-dd', 'en-GB');
+    booking1.startTime = '11:30';
+    booking1.endTime = '12:30';
+    booking1.participants = 12;
+
+    const room2 = this.getRoomById(2);
+    const user2 = this.getUserById(2);
+    const booking2 = new Booking();
+    booking2.id = 2;
+    booking2.room = room2;
+    booking2.user = user2;
+    booking2.layout = Layout.USHAPE;
+    booking2.title = 'Another meeting';
+    booking2.date = formatDate(new Date(), 'yyyy-MM-dd', 'en-GB');
+    booking2.startTime = '14:00';
+    booking2.endTime = '15:00';
+    booking2.participants = 5;
+    this.bookings.push(booking1);
+    this.bookings.push(booking2);
+
+  }
+
+  private getRoomById(id: number): Room{
+    return this.rooms.find(room => room.id === id)!;
   }
 
   getRooms() : Observable<Array<Room>>{
@@ -95,6 +136,10 @@ export class DataService {
     return of(null);
   }
 
+  private getUserById(id: number): User{
+    return this.users.find(user => user.id === id)!;
+  }
+
   getUsers() : Observable<Array<User>> {
     return of(this.users);
   }
@@ -126,5 +171,9 @@ export class DataService {
 
   resetUserPassword(id: number) : Observable<any>{
     return of(null);
+  }
+
+  getBookings() : Observable<Array<Booking>>{
+    return of(this.bookings);
   }
 }
