@@ -176,4 +176,9 @@ export class DataService {
   getBookings() : Observable<Array<Booking>>{
     return of(this.bookings);
   }
+
+  getBooking(id: number) : Observable<Booking>{
+    return of(this.bookings.find(next => next.id === id)!);
+  }
+
 }
