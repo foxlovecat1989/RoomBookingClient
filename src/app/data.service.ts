@@ -117,4 +117,8 @@ export class DataService {
     this.users.splice(this.users.indexOf(user), 1);
     return of(null);
   }
+
+  resetUserPassword(id: number) : Observable<any>{
+    return of(null);
+  }
 }
