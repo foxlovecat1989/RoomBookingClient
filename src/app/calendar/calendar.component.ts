@@ -30,4 +30,8 @@ export class CalendarComponent implements OnInit {
     this.router.navigate(['editBooking'], {queryParams : {id : id}});
   }
 
+  navigateToAddBooking(){
+    this.router.navigate(['addBooking']);
+  }
+
 }
