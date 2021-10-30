@@ -89,6 +89,12 @@ export class DataService {
     return of(originalRoom);
   }
 
+  deleteRoom(id: number) : Observable<any>{
+    const room = this.rooms.find(r => r.id === id)!;
+    this.rooms.splice(this.rooms.indexOf(room), 1);
+    return of(null);
+  }
+
   getUsers() : Observable<Array<User>> {
     return of(this.users);
   }
