@@ -1,7 +1,6 @@
 import { APP_INITIALIZER, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/data.service';
-import { LayoutService } from 'src/app/layout.service';
 import { Booking } from 'src/Model/Booking';
 import { Layout, Room } from 'src/Model/Room';
 import { User } from 'src/Model/User';
@@ -22,7 +21,6 @@ export class EditBookingComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private activatedRoute : ActivatedRoute,
-    private layoutService : LayoutService,
     private router : Router
   ) { }
 
@@ -60,7 +58,7 @@ export class EditBookingComponent implements OnInit {
   }
 
   private getValuesOfLayoutEnum() {
-    this.layoutService.getValuesOfLayoutEnum().subscribe(next => this.valuesOfLayoutEnum = next);
+    this.dataService.getValuesOfLayoutEnum().subscribe(next => this.valuesOfLayoutEnum = next);
   }
 
   private subscribeToBooking() {

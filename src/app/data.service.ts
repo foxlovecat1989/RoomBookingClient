@@ -219,4 +219,19 @@ export class DataService {
     return of(null);
   }
 
+  getValuesOfLayoutEnum(): Observable<Array<string>>{
+    const keysOfLayouts = Object.keys(Layout);
+    const valuesOfLayouts = new Array<string>();
+    for(const key of keysOfLayouts){
+      if(this.isValidKey(key, Layout))
+      valuesOfLayouts.push(Layout[key]);
+    }
+
+    return of(valuesOfLayouts);
+  }
+
+  private isValidKey(key: string, obj: {[propName: string]: any}) : key is keyof object {
+    return key in obj;
+  }
+
 }
