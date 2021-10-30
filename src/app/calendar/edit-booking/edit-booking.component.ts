@@ -1,6 +1,7 @@
 import { APP_INITIALIZER, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/data.service';
+import { LayoutService } from 'src/app/layout.service';
 import { Booking } from 'src/Model/Booking';
 import { Layout, Room } from 'src/Model/Room';
 import { User } from 'src/Model/User';
@@ -15,19 +16,26 @@ export class EditBookingComponent implements OnInit {
   booking!: Booking;
   rooms!: Array<Room>;
   layouts = Object.keys(Layout);
+  valuesOfLayoutEnum!: Array<string>;
   users!: Array<User>;
 
   constructor(
     private dataService: DataService,
-    private activatedRoute : ActivatedRoute
+    private activatedRoute : ActivatedRoute,
+    private layoutService : LayoutService
   ) { }
 
   ngOnInit(): void {
       this.getExistRooms();
       this.getExistUsers();
+      this.getValuesOfLayoutEnum();
       this.subscribeToBooking();
   }
 
+
+  private getValuesOfLayoutEnum() {
+    this.layoutService.getValuesOfLayoutEnum().subscribe(next => this.valuesOfLayoutEnum = next);
+  }
 
   private subscribeToBooking() {
     this.activatedRoute.queryParams.subscribe(params => {
