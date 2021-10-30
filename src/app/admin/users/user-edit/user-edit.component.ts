@@ -44,6 +44,13 @@ export class UserEditComponent implements OnInit {
     this.userResetEventSubscription.unsubscribe();
   }
 
+  submit(){
+    if(this.formUser.id!=null)
+      this.saveEditUser();
+    else
+      this.saveAdduser();
+  }
+
   private initializeForm() {
     this.copyUserToAnotherObject();
     this.checkNameIsValid();
@@ -52,13 +59,6 @@ export class UserEditComponent implements OnInit {
 
   private copyUserToAnotherObject() {
     this.formUser = Object.assign({}, this.user);
-  }
-
-  submit(){
-    if(this.formUser.id!=null)
-      this.saveEditUser();
-    else
-      this.saveAdduser();
   }
 
   private saveEditUser() {
