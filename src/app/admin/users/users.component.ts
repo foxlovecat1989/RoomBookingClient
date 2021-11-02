@@ -13,6 +13,8 @@ export class UsersComponent implements OnInit {
   users!: Array<User>;
   selectedUser!: User;
   action !: string;
+  message = 'Please wait... getting the list of users';
+  shouldLoadData = true;
 
   constructor(
       private dataService: DataService,
@@ -22,8 +24,7 @@ export class UsersComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    this.subscribeUsers();
-    this.subscribeRouteParams();
+    this.subscribeUsersToLoadData();
   }
   private subscribeRouteParams() {
     this.activatedRoute.queryParams.subscribe(
@@ -41,8 +42,19 @@ export class UsersComponent implements OnInit {
     );
   }
 
-  private subscribeUsers() {
-    this.dataService.getUsers().subscribe(users => this.users = users);
+  private subscribeUsersToLoadData() {
+    this.dataService.getUsers()
+      .subscribe(
+        users => {
+          this.shouldLoadData = false;
+          this.users = users;
+          this.subscribeRouteParams();
+        },
+        error => {
+          this.message = 'An Error Occurred, please contact support...'
+        }
+
+      );
   }
 
   navigateToViewUser(id: number) {
