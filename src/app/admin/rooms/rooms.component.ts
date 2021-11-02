@@ -16,6 +16,7 @@ export class RoomsComponent implements OnInit {
   selectedRoom!: Room;
   action!: string;
   shouldLoadingData = true;
+  message = 'Please wait... getting the list of rooms';
 
   constructor(
     private dataService: DataService,
@@ -49,7 +50,14 @@ export class RoomsComponent implements OnInit {
       rooms => {
         this.shouldLoadingData = false;
         this.rooms = rooms;
-      });
+      },
+      error => {
+        if(error.status === 402)
+          this.message = 'You need to pay for this application.'
+        else
+          this.message = 'Sorry, Something went wrong - please try again... ' + error.message;
+      }
+      );
   }
 
   navigateToViewRoom(id: number){
