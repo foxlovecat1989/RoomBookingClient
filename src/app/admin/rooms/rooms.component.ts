@@ -15,6 +15,7 @@ export class RoomsComponent implements OnInit {
   rooms!: Array<Room>;
   selectedRoom!: Room;
   action!: string;
+  shouldLoadingData = true;
 
   constructor(
     private dataService: DataService,
@@ -24,7 +25,7 @@ export class RoomsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.subscribeRooms();
+    this.subscribeRoomsToLoadingData();
     this.subscribeRouteParams();
   }
 
@@ -43,8 +44,12 @@ export class RoomsComponent implements OnInit {
     );
   }
 
-  private subscribeRooms() {
-    this.dataService.getRooms().subscribe(rooms => this.rooms = rooms);
+  private subscribeRoomsToLoadingData() {
+    this.dataService.getRooms().subscribe(
+      rooms => {
+        this.shouldLoadingData = false;
+        this.rooms = rooms;
+      });
   }
 
   navigateToViewRoom(id: number){
