@@ -26,6 +26,7 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.subscribeUsersToLoadData();
   }
+
   private subscribeRouteParams() {
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -42,7 +43,7 @@ export class UsersComponent implements OnInit {
     );
   }
 
-  private subscribeUsersToLoadData() {
+  subscribeUsersToLoadData() {
     this.dataService.getUsers()
       .subscribe(
         users => {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DataService } from 'src/app/data.service';
@@ -14,6 +14,10 @@ export class UserEditComponent implements OnInit {
 
   @Input()
   user!: User;
+
+  @Output()
+  dataChangedEvent = new EventEmitter();
+
   message!: string;
   formUser!: User;
   password!: string;
@@ -23,6 +27,8 @@ export class UserEditComponent implements OnInit {
   passwordsMatch = false;
   userResetEventSubscription!: Subscription;
 
+
+
   constructor(
       private dataService: DataService,
       private router: Router,
@@ -31,24 +37,30 @@ export class UserEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
-    this.userResetEventSubscription =
-      this.formResetService.resetUserFormEvent.subscribe(
-          user => {
-            this.user = user;
-            this.initializeForm();
-          }
-      );
+    this.subscribeUserResetEvent();
   }
 
   ngOnDestroy(): void{
     this.userResetEventSubscription.unsubscribe();
   }
 
+  private subscribeUserResetEvent() {
+    this.userResetEventSubscription =
+      this.formResetService.resetUserFormEvent.subscribe(
+        user => {
+          this.user = user;
+          this.initializeForm();
+        }
+      );
+  }
+
   submit(){
+    this.message = 'Saving...'
     if(this.formUser.id!=null)
       this.saveEditUser();
     else
       this.saveAdduser();
+
   }
 
   private initializeForm() {
@@ -65,7 +77,13 @@ export class UserEditComponent implements OnInit {
     this.dataService
       .updateUser(this.formUser)
       .subscribe(
-        user => this.router.navigate(['admin', 'users'], { queryParams: { action: 'view', id: user.id } })
+        user => {
+          this.dataChangedEvent.emit();
+          this.router.navigate(['admin', 'users'], { queryParams: { action: 'view', id: user.id } });
+        },
+        error => {
+          this.message = 'Something went wrong, data wasn\'t saved. You may want to try again...';
+        }
       );
   }
 
@@ -73,7 +91,10 @@ export class UserEditComponent implements OnInit {
     this.dataService
       .addUser(this.formUser, this.password)
       .subscribe(
-        user => this.router.navigate(['admin', 'users'], { queryParams: { action: 'add'} })
+        user => {
+          this.dataChangedEvent.emit();
+          this.router.navigate(['admin', 'users'], { queryParams: { action: 'add'} });
+        }
       );
   }
 

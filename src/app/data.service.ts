@@ -57,6 +57,10 @@ export class DataService {
       );
   }
 
+  updateUser(user: User) : Observable<any> {
+    return this.http.put<User>(environment.restURL + '/api/users', user);
+  }
+
   addRoom(newRoom : Room) : Observable<any>{
     return of(null);
   }
@@ -67,10 +71,6 @@ export class DataService {
   }
 
   deleteRoom(id: number) : Observable<any>{
-    return of(null);
-  }
-
-  updateUser(user: User) : Observable<any> {
     return of(null);
   }
 
