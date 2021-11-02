@@ -2,6 +2,7 @@ import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Booking } from 'src/Model/Booking';
+import { User } from 'src/Model/User';
 import { DataService } from '../data.service';
 
 @Component({

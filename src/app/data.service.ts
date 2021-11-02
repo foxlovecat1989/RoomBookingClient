@@ -1,11 +1,13 @@
 import { formatDate } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { TYPED_NULL_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Booking } from 'src/Model/Booking';
 import { Layout, LayoutCapacity, Room } from 'src/Model/Room';
 import { User } from 'src/Model/User';
-
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,15 +17,44 @@ export class DataService {
   private users!: Array<User>;
   private bookings!: Array<Booking>;
 
-  constructor() {
+  constructor(private http : HttpClient) {
+    console.log(environment.restURL);
   }
 
-  private isValidKey(key: string, obj: {[propName: string]: any}) : key is keyof object {
-    return key in obj;
+  // getUserById(id: number) : Observable<User> {
+  //   return this.http.get<User>(environment.restURL + '/api/users/' + id)
+  //     .pipe(
+  //       map( data => User.fromHttp(data))
+  //     );
+  // }
+
+  getUsers() : Observable<Array<User>> {
+    return this.http.get<Array<User>>(environment.restURL + '/api/users')
+     .pipe(
+       map(
+         data => {
+           const users = new Array<User>();
+           for(const user of data)
+              users.push(User.fromHttp(user));
+
+            return users;
+         }
+       )
+     );
+
   }
 
-  getRooms() : Observable<any>{
-    return of(null);
+  getRooms() : Observable<Array<Room>> {
+    return this.http.get<Array<Room>>(environment.restURL + '/api/rooms')
+      .pipe(
+        map( data => {
+          const rooms = new Array<Room>();
+          for (const room of data) {
+            rooms.push(Room.fromHttp(room));
+          }
+          return rooms;
+        })
+      );
   }
 
   addRoom(newRoom : Room) : Observable<any>{
@@ -36,10 +67,6 @@ export class DataService {
   }
 
   deleteRoom(id: number) : Observable<any>{
-    return of(null);
-  }
-
-  getUsers() : Observable<any> {
     return of(null);
   }
 
@@ -88,6 +115,10 @@ export class DataService {
     }
 
     return of(valuesOfLayouts);
+  }
+
+  private isValidKey(key: string, obj: {[propName: string]: any}) : key is keyof object {
+    return key in obj;
   }
 
 }
