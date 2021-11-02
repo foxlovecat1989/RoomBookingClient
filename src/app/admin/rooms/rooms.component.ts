@@ -17,6 +17,7 @@ export class RoomsComponent implements OnInit {
   action!: string;
   shouldLoadingData = true;
   message = 'Please wait... getting the list of rooms';
+  reloadAttempts = 0;
 
   constructor(
     private dataService: DataService,
@@ -27,7 +28,6 @@ export class RoomsComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscribeRoomsToLoadingData();
-    this.subscribeRouteParams();
   }
 
   private subscribeRouteParams() {
@@ -50,12 +50,19 @@ export class RoomsComponent implements OnInit {
       rooms => {
         this.shouldLoadingData = false;
         this.rooms = rooms;
+        this.subscribeRouteParams();
       },
       error => {
         if(error.status === 402)
           this.message = 'You need to pay for this application.'
         else
           this.message = 'Sorry, Something went wrong - please try again... ' + error.message;
+          console.log(this.message);
+          this.reloadAttempts++;
+          if(this.reloadAttempts < 10)
+            this.subscribeRoomsToLoadingData();
+          else
+            this.message = 'Sorry, something went wrong, please contact support...';
       }
       );
   }
