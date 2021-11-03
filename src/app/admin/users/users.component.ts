@@ -32,18 +32,14 @@ export class UsersComponent implements OnInit {
       params => {
         const id = params['id'];
         this.action = params['action'];
-        if(id)                        // under the editing mode
+        if(id) {
           this.selectedUser = this.users.find(user => user.id === +id)!;
-        if(this.action === 'add'){    // under the adding mode
-          this.selectedUser = new User();
-          this.action = 'edit';
-          this.formResetService.resetUserFormEvent.emit(this.selectedUser);
         }
       }
     );
   }
 
-  subscribeUsersToLoadData() {
+   subscribeUsersToLoadData() {
     this.dataService.getUsers()
       .subscribe(
         users => {
@@ -63,7 +59,9 @@ export class UsersComponent implements OnInit {
   }
 
   navigateToAddUser(){
+    this.selectedUser = new User();
     this.router.navigate(['admin', 'users'], {queryParams : {action : 'add'}});
+    this.formResetService.resetUserFormEvent.emit(this.selectedUser);
   }
 
 }

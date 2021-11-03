@@ -57,24 +57,45 @@ export class DataService {
       );
   }
 
-  updateUser(user: User) : Observable<any> {
+  updateUser(user: User) : Observable<User> {
     return this.http.put<User>(environment.restURL + '/api/users', user);
   }
 
+  addUser(newUser : User, password : string) : Observable<User>{
+    const fullUser = {id : newUser.id, name : newUser.name, password : password };
+    return this.http.post<User>(environment.restURL + '/api/users', fullUser);
+  }
+
   addRoom(newRoom : Room) : Observable<any>{
-    return of(null);
+    return this.http.post<Room>(environment.restURL + '/api/rooms', this.getCorrectedRoom(newRoom));
   }
 
 
-  updateRoom(room: Room) : Observable<any>{
-    return of(null);
+  updateRoom(room: Room) : Observable<Room>{
+    return this.http.put<Room>(environment.restURL + '/api/rooms', this.getCorrectedRoom(room));
+  }
+
+  private getCorrectedRoom(room : Room) {
+    const correctedRoom : {'id': number, 'name': string, 'location': string, layoutCapacities : Array<LayoutCapacity>}
+      = {id: room.id, name: room.name, location: room.location, layoutCapacities : []};
+    for (const lc of room.layoutCapacities) {
+
+      let correctLayout : Layout = Layout.THEATER;
+      for (let member in Layout) {
+        if(this.isValidKey(member, Layout))
+          if (Layout[member] === lc.layout) {
+            correctLayout = member;
+          }
+      }
+
+      const correctedLayout : {'layout': Layout, 'capacity': number}
+          = {layout : correctLayout, capacity: lc.capacity};
+      correctedRoom.layoutCapacities.push(correctedLayout);
+    }
+    return correctedRoom;
   }
 
   deleteRoom(id: number) : Observable<any>{
-    return of(null);
-  }
-
-  addUser(newUser : User, password : string) : Observable<any>{
     return of(null);
   }
 

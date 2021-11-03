@@ -54,13 +54,14 @@ export class UserEditComponent implements OnInit {
       );
   }
 
-  submit(){
+  onSubmit(){
     this.message = 'Saving...'
-    if(this.formUser.id!=null)
+    // console.log(this.formUser.id);
+    if(this.formUser.id == null){
+      this.saveAddUser();
+    } else{
       this.saveEditUser();
-    else
-      this.saveAdduser();
-
+    }
   }
 
   private initializeForm() {
@@ -87,13 +88,16 @@ export class UserEditComponent implements OnInit {
       );
   }
 
-  private saveAdduser(){
+  private saveAddUser(){
     this.dataService
       .addUser(this.formUser, this.password)
       .subscribe(
         user => {
           this.dataChangedEvent.emit();
-          this.router.navigate(['admin', 'users'], { queryParams: { action: 'add'} });
+          this.router.navigate(['admin', 'users'], { queryParams: { action: 'view', id: user.id } });
+        },
+        error => {
+          this.message = 'Something went wrong, data wasn\'t saved. You may want to try again...';
         }
       );
   }

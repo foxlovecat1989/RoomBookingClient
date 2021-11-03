@@ -25,5 +25,5 @@
     <div class="alert alert-danger" *ngIf="!passwordsMatch && pass2.touched">Passwords are not match</div>
   </div>
 
-  <button type="button" class="btn btn-primary" [disabled]="userForm.invalid || !nameIsValid || !passwordsAreValid || !passwordsMatch" (click)="submit()">Save</button>
+  <button type="button" class="btn btn-primary" [disabled]="userForm.invalid || !nameIsValid || !passwordsAreValid || !passwordsMatch" (click)="onSubmit()">Save</button>
 </form>

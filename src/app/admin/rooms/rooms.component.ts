@@ -45,7 +45,7 @@ export class RoomsComponent implements OnInit {
     );
   }
 
-  private subscribeRoomsToLoadingData() {
+  subscribeRoomsToLoadingData() {
     this.dataService.getRooms().subscribe(
       rooms => {
         this.shouldLoadingData = false;

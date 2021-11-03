@@ -9,8 +9,4 @@ export class User{
 
     return newUser;
   }
-
-  getRole() : string{
-    return 'standard';
-  }
 }
